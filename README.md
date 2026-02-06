@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CUBI - Sistem Absensi Pegawai
+
+Sistem manajemen absensi pegawai berbasis web dengan Next.js 16, Prisma, dan TanStack Query.
+
+## Fitur
+
+- **Dashboard** - Statistik kehadiran dan chart visualisasi
+- **Manajemen Pegawai** - CRUD data pegawai dengan pencarian dan filter
+- **Absensi** - Check-in/check-out harian dengan riwayat absensi
+- **Laporan Bulanan** - Laporan kehadiran per bulan dengan kalender hari kerja
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Database**: PostgreSQL dengan Prisma ORM
+- **State Management**: TanStack Query + nuqs (URL state)
+- **UI Components**: shadcn/ui + Radix UI
+- **Styling**: Tailwind CSS 4
+- **Animation**: Framer Motion
+- **Form**: React Hook Form + Zod validation
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+ atau Bun
+- PostgreSQL database
+
+### Installation
+
+1. Clone repository dan install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Setup environment variables:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env
+# Edit .env dengan DATABASE_URL Anda
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Setup database:
 
-## Learn More
+```bash
+bun run db:migrate
+bun run db:generate
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Jalankan development server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+bun run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Buka [http://localhost:3000](http://localhost:3000) di browser.
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Command | Description |
+|---------|-------------|
+| `bun run dev` | Jalankan development server |
+| `bun run build` | Build untuk production |
+| `bun run start` | Jalankan production server |
+| `bun run lint` | Jalankan Biome linter |
+| `bun run lint:fix` | Fix lint errors |
+| `bun run db:migrate` | Jalankan database migration |
+| `bun run db:generate` | Generate Prisma client |
+| `bun run db:studio` | Buka Prisma Studio |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Struktur Folder
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── api/               # API Routes
+│   ├── absensi/           # Halaman Absensi
+│   ├── pegawai/           # Halaman Pegawai
+│   └── laporan/           # Halaman Laporan
+├── features/              # Feature-based modules
+│   ├── absensi/           # Absensi feature
+│   ├── pegawai/           # Pegawai feature
+│   └── laporan/           # Laporan feature
+├── shared/                # Shared components & utilities
+│   ├── components/        # UI Components
+│   ├── lib/              # Utilities & helpers
+│   └── providers/        # React providers
+└── prisma/               # Prisma schema & migrations
+```
+
+## License
+
+MIT
