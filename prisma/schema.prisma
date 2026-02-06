@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Employee Master Data
+model Pegawai {
+  id           String   @id @default(cuid())
+  nama         String
+  email        String   @unique
+  jabatan      String
+  tanggalMasuk DateTime
+  statusAktif  Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  absensi Absensi[]
+
+  @@index([email])
+  @@index([statusAktif])
+  @@map("pegawai")
+}
+
+// Attendance Records
+model Absensi {
+  id         String        @id @default(cuid())
+  pegawaiId  String
+  tanggal    DateTime      @db.Date
+  jamMasuk   DateTime?
+  jamKeluar  DateTime?
+  status     StatusAbsensi @default(HADIR)
+  keterangan String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  // Relations
+  pegawai Pegawai @relation(fields: [pegawaiId], references: [id], onDelete: Cascade)
+
+  // Prevent duplicate check-in on same day
+  @@unique([pegawaiId, tanggal])
+  @@index([pegawaiId])
+  @@index([tanggal])
+  @@index([status])
+  @@map("absensi")
+}
+
+// Public Holidays (Indonesia)
+model PublicHoliday {
+  id         String   @id @default(cuid())
+  tanggal    DateTime @db.Date
+  nama       String
+  keterangan String?
+  isNational Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([tanggal])
+  @@index([tanggal])
+  @@map("public_holidays")
+}
+
+// Enum for attendance status
+enum StatusAbsensi {
+  HADIR // Present
+  IZIN // Permission/Leave
+  SAKIT // Sick
+  ALPHA // Absent without notice
+}
