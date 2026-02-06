@@ -1,7 +1,12 @@
 "use client";
 
 import { Calendar } from "@/shared/components/shadcn/calendar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/shadcn/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/shared/components/shadcn/card";
 import { useGetHolidays } from "@/features/laporan/hooks/use-laporan-query";
 import { Skeleton } from "@/shared/components/shadcn/skeleton";
 import { useMemo } from "react";
@@ -25,7 +30,9 @@ export function WorkingDaysCalendar({ month, year }: WorkingDaysCalendarProps) {
       const dayOfWeek = date.getDay();
       const dateStr = date.toISOString().split("T")[0];
 
-      const isHoliday = holidays?.some((h) => h.tanggal.split("T")[0] === dateStr);
+      const isHoliday = holidays?.some(
+        (h) => new Date(h.tanggal).toISOString().split("T")[0] === dateStr,
+      );
       const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
 
       if (isHoliday) {
@@ -53,7 +60,9 @@ export function WorkingDaysCalendar({ month, year }: WorkingDaysCalendarProps) {
       const dayOfWeek = date.getDay();
       const dateStr = date.toISOString().split("T")[0];
 
-      const isHoliday = holidays.some((h) => h.tanggal.split("T")[0] === dateStr);
+      const isHoliday = holidays.some(
+        (h) => new Date(h.tanggal).toISOString().split("T")[0] === dateStr,
+      );
 
       if (!isHoliday) {
         if (dayOfWeek === 0 || dayOfWeek === 6) {
