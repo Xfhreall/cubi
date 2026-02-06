@@ -5,12 +5,10 @@ import type { ApiResponse } from "@/shared/types";
 import type { Absensi } from "@prisma/client";
 import { startOfDay, endOfDay } from "date-fns";
 
-// POST /api/absensi/check-in - Check in employee
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Validate input
     const validatedData = checkInSchema.parse(body);
 
     const now = new Date();
@@ -21,10 +19,8 @@ export async function POST(request: NextRequest) {
       ? new Date(validatedData.jamMasuk)
       : now;
 
-    // Normalize tanggal to date only (remove time)
     const tanggalOnly = startOfDay(tanggal);
 
-    // Check if employee exists
     const pegawai = await prisma.pegawai.findUnique({
       where: { id: validatedData.pegawaiId },
     });
@@ -37,7 +33,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 404 });
     }
 
-    // Check if already checked in today
     const existingAbsensi = await prisma.absensi.findUnique({
       where: {
         pegawaiId_tanggal: {
@@ -55,7 +50,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 400 });
     }
 
-    // Create absensi record
     const absensi = await prisma.absensi.create({
       data: {
         pegawaiId: validatedData.pegawaiId,

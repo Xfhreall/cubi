@@ -4,12 +4,10 @@ import { checkOutSchema } from "@/shared/lib/validations";
 import type { ApiResponse } from "@/shared/types";
 import type { Absensi } from "@prisma/client";
 
-// POST /api/absensi/check-out - Check out employee
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Validate input
     const validatedData = checkOutSchema.parse(body);
 
     const now = new Date();
@@ -17,7 +15,6 @@ export async function POST(request: NextRequest) {
       ? new Date(validatedData.jamKeluar)
       : now;
 
-    // Check if absensi record exists
     const existingAbsensi = await prisma.absensi.findUnique({
       where: { id: validatedData.id },
     });
@@ -38,7 +35,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 400 });
     }
 
-    // Update absensi with check-out time
     const absensi = await prisma.absensi.update({
       where: { id: validatedData.id },
       data: {
