@@ -53,7 +53,7 @@ async function main() {
         email: "maya.sari@company.com",
         jabatan: "Marketing Specialist",
         tanggalMasuk: new Date("2023-02-14"),
-        statusAktif: false, // Inactive employee
+        statusAktif: false,
       },
     ],
   });
