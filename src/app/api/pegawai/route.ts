@@ -4,7 +4,6 @@ import { createPegawaiSchema } from "@/shared/lib/validations";
 import type { ApiResponse } from "@/shared/types";
 import type { Pegawai } from "@prisma/client";
 
-// GET /api/pegawai - List all employees
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -55,15 +54,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/pegawai - Create new employee
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Validate input
     const validatedData = createPegawaiSchema.parse(body);
 
-    // Check if email already exists
     const existingPegawai = await prisma.pegawai.findUnique({
       where: { email: validatedData.email },
     });
@@ -76,7 +72,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response, { status: 400 });
     }
 
-    // Create pegawai
     const pegawai = await prisma.pegawai.create({
       data: validatedData,
     });

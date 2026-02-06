@@ -4,7 +4,6 @@ import { updatePegawaiSchema } from "@/shared/lib/validations";
 import type { ApiResponse } from "@/shared/types";
 import type { Pegawai } from "@prisma/client";
 
-// GET /api/pegawai/[id] - Get single employee
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -45,7 +44,6 @@ export async function GET(
   }
 }
 
-// PUT /api/pegawai/[id] - Update employee
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -54,10 +52,8 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    // Validate input
     const validatedData = updatePegawaiSchema.parse(body);
 
-    // Check if pegawai exists
     const existingPegawai = await prisma.pegawai.findUnique({
       where: { id },
     });
@@ -70,7 +66,6 @@ export async function PUT(
       return NextResponse.json(response, { status: 404 });
     }
 
-    // Check if email is being changed and already exists
     if (validatedData.email && validatedData.email !== existingPegawai.email) {
       const emailExists = await prisma.pegawai.findUnique({
         where: { email: validatedData.email },
@@ -85,7 +80,6 @@ export async function PUT(
       }
     }
 
-    // Update pegawai
     const pegawai = await prisma.pegawai.update({
       where: { id },
       data: validatedData,
@@ -117,7 +111,6 @@ export async function PUT(
   }
 }
 
-// DELETE /api/pegawai/[id] - Delete employee
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -125,7 +118,6 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // Check if pegawai exists
     const existingPegawai = await prisma.pegawai.findUnique({
       where: { id },
     });
@@ -138,7 +130,6 @@ export async function DELETE(
       return NextResponse.json(response, { status: 404 });
     }
 
-    // Delete pegawai (cascade will delete related absensi)
     await prisma.pegawai.delete({
       where: { id },
     });
