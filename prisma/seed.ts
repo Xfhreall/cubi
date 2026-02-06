@@ -164,13 +164,11 @@ async function main() {
   });
   console.log(`✅ Created ${holidays.count} public holidays`);
 
-  // Seed Absensi (Sample attendance for January 2026)
   console.log("📅 Seeding attendance records...");
   const absensiData = [];
 
-  // Create attendance for first 2 weeks of January 2026 (excluding weekends)
-  const startDate = new Date("2026-01-02"); // Friday
-  const endDate = new Date("2026-01-16"); // Friday
+  const startDate = new Date("2026-01-02");
+  const endDate = new Date("2026-01-16");
 
   for (
     let date = new Date(startDate);
@@ -179,41 +177,31 @@ async function main() {
   ) {
     const dayOfWeek = date.getDay();
 
-    // Skip weekends (0 = Sunday, 6 = Saturday)
     if (dayOfWeek === 0 || dayOfWeek === 6) continue;
 
-    // Skip New Year's Day (2026-01-01)
     if (date.getDate() === 1 && date.getMonth() === 0) continue;
 
-    // Create attendance for each active employee
     for (const employee of allPegawai) {
-      if (!employee.statusAktif) continue; // Skip inactive employees
+      if (!employee.statusAktif) continue;
 
-      // Randomly assign attendance status (90% present, 5% leave, 3% sick, 2% absent)
       const random = Math.random();
       let status: "HADIR" | "IZIN" | "SAKIT" | "ALPHA" = "HADIR";
       let jamMasuk: Date | null = new Date(date);
       let jamKeluar: Date | null = new Date(date);
 
       if (random < 0.9) {
-        // 90% present
         status = "HADIR";
-        // Random check-in time between 08:00 and 09:00
         jamMasuk.setHours(8, Math.floor(Math.random() * 60), 0, 0);
-        // Random check-out time between 17:00 and 18:00
         jamKeluar.setHours(17, Math.floor(Math.random() * 60), 0, 0);
       } else if (random < 0.95) {
-        // 5% leave
         status = "IZIN";
         jamMasuk = null;
         jamKeluar = null;
       } else if (random < 0.98) {
-        // 3% sick
         status = "SAKIT";
         jamMasuk = null;
         jamKeluar = null;
       } else {
-        // 2% absent
         status = "ALPHA";
         jamMasuk = null;
         jamKeluar = null;
